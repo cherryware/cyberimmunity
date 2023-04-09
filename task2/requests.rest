@@ -1,0 +1,50 @@
+### data ingest
+
+POST http://localhost:5003/ingest HTTP/1.1
+content-type: application/json
+# auth: very-secure-token
+
+[
+    {
+        "param_name": "current",
+        "param_units": "A",
+        "param_value": 60
+    },
+    {
+        "param_name": "temperature",
+        "param_units": "C",
+        "param_value": 36
+    }
+]
+
+### get new alerts
+
+GET http://localhost:6003/alerts HTTP/1.1
+auth: very-secure-token
+
+
+### application
+
+GET http://localhost:5000/ HTTP/1.1
+
+
+### manager
+
+POST http://localhost:5002/update HTTP/1.1
+content-type: application/json
+auth: very-secure-token
+
+{
+    "url":"http://file_server:5001/download-update/app-update.zip", 
+    "target": "app", 
+    "digest": "5cd4492c9d9e14b8cd004b49ded4f81b2a377d0d010b478f9561efe1ed9edbb9", 
+    "digest_alg": "sha256"
+}
+
+
+### get update digest
+GET http://localhost:5001/get-digest/app-update.zip HTTP/1.1
+
+### get archived update file
+GET http://localhost:5001/download-update/app-update.zip HTTP/1.1
+
