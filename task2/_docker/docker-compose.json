@@ -1,0 +1,16 @@
+{
+    "version": "3.4",
+    "services": {
+        "kumo_app": {
+            "container_name": "kumo_app",
+            "image": "kumo_app:1.0.0",
+            "build": {
+                "context": "../",
+                "dockerfile": "_docker/Dockerfile.app"
+            },
+            "ports": [
+                "5000:5000"
+            ]
+        }
+    }
+}
