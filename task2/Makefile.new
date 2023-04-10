@@ -1,0 +1,62 @@
+# Makefile
+
+.PHONY: default test www
+
+default: # print a list of available commands
+	@echo "List of available commands in Makefile:"
+	@grep "^[a-z]" Makefile | sed 's/:.*#/:/g;s/^/- /g'
+
+
+www: # install & setup 'nginx' web server
+	.scripts/install.sh nginx
+	.scripts/default_www.sh '.templates'
+
+
+clean-pycache: # delete '__pycache__' folders in all subfolders
+	@find . -type d -name '__pycache__' -exec rm -rfv {} +
+
+
+clean-docker: # delete '<none>' images from docker library
+	.scripts/docker_clean.sh
+
+
+exec-scripts: # set u+x (executable for current user) for all files in '.scripts' folder
+	chmod u+x ./.scripts/*
+
+
+dock: # create Dockerfile from template
+	.scripts/docker.sh name=app folder=app app=app.py port=5000
+
+
+test: clean-docker # this is test
+	.scripts/docker_clean.sh kumo_app
+
+
+routine: clean-pycache exec-scripts # perform a routine tasks (clean-pycache, exec-scripts, etc.)
+
+
+#  ==============================================
+#   Commands below are used for 'docker-compose'
+#  ----------------------------------------------
+
+build: # alias for 'docker-compose json build'
+	docker-compose -f _docker/docker-compose.json up -d
+
+rebuild: # updates existing docker image
+	docker-compose stop app
+	docker-compose up -d --build --no-deps --force-recreate app
+
+run: # alias for 'docker-compose up -d'
+	docker-compose up -d
+
+restart: # alias for 'docker-compose restart'
+	docker-compose restart
+
+stop: # alias for 'docker-compose stop'
+	docker-compose stop
+
+down: # alias for 'docker-compose down'
+	docker-compose down
+
+logs: # alias for 'docker-compose logs -f --tail 100'
+	docker-compose logs -f --tail 100
