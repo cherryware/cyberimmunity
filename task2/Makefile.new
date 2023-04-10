@@ -29,7 +29,7 @@ dock: # create Dockerfile from template
 
 
 test: clean-docker # this is test
-	.scripts/docker_clean.sh kumo_app
+	.scripts/test.sh kumo_app
 
 
 routine: clean-pycache exec-scripts # perform a routine tasks (clean-pycache, exec-scripts, etc.)
